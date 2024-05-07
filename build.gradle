@@ -1,18 +1,21 @@
 buildscript {
     repositories {
-        maven { 
-        	url = 'https://files.minecraftforge.net/maven' 
+        maven {
+            url = 'https://files.minecraftforge.net/maven'
         }
         jcenter()
         mavenCentral()
+
     }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
-    }
+
+}
+
+plugins {
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
 
 apply plugin: 'net.minecraftforge.gradle'
-
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 // MCVER - UN/INTEGRATE . MINORCHANGES . PATCH
@@ -20,11 +23,11 @@ version = '7.4.4'
 group = 'ms55.moreplates'
 archivesBaseName = 'moreplates-1.16.5'
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '17' // Need this here so eclipse task generates correctly.
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
-    mappings channel: 'snapshot', version: '20210309-1.16.5'
+    mappings channel: 'parchment', version: '2023.09.03-1.20.1'
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -80,37 +83,11 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/main/resources' }
 
 
-repositories {
-    mavenCentral()
-    maven {
-        url "https://maven.blamejared.com"
-    }
-    maven {
-        name 'Curse maven'
-        url = "https://www.cursemaven.com"
-    }
-}
-
-//configurations {
-    // configuration that holds jars to include in the jar
-//    moreLibs
-//}
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.5-36.1.32'
-
-    //moreLibs group: 'net.oneandone.reflections8', name: 'reflections8', version: '0.11.5'
-    //moreLibs group: 'org.reflections', name: 'reflections', version: '0.9.11'
-
-    //configurations.compile.extendsFrom(configurations.moreLibs)
-
-    compileOnly fg.deobf("blusunrize.immersiveengineering:ImmersiveEngineering:1.16.4-4.1.1-128")
-    runtimeOnly fg.deobf("blusunrize.immersiveengineering:ImmersiveEngineering:1.16.4-4.1.1-128")
-
-    //compile fg.deobf("curse.maven:thermalexpansion-69163:3148031")
-    //compile fg.deobf("curse.maven:thermalfoundation-222880:3155830")
-    //compile fg.deobf("curse.maven:cofh-69162:3155824")
+    minecraft 'net.minecraftforge:forge:1.20.1-47.2.30'
 }
+
 
 jar {
     manifest {
