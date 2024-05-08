@@ -4,6 +4,7 @@ import ms55.moreplates.MorePlates;
 import ms55.moreplates.common.enumeration.EnumMaterials;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.LanguageProvider;
+import net.minecraft.data.PackOutput;
 
 public class Language extends LanguageProvider {
 	public Language(DataGenerator gen) {

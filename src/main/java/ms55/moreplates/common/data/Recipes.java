@@ -10,22 +10,22 @@ import ms55.moreplates.client.config.Config;
 import ms55.moreplates.common.advancements.BooleanCondition;
 import ms55.moreplates.common.enumeration.EnumMaterials;
 import ms55.moreplates.common.util.Mods;
-import net.minecraft.block.Blocks;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.IFinishedRecipe;
-import net.minecraft.data.RecipeProvider;
-import net.minecraft.data.ShapedRecipeBuilder;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.tags.ITag;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 
 public class Recipes extends RecipeProvider implements IConditionBuilder {
 
@@ -34,7 +34,7 @@ public class Recipes extends RecipeProvider implements IConditionBuilder {
     }
 
     @Override
-    protected void registerRecipes(Consumer<IFinishedRecipe> consumer) {
+    protected void registerRecipes(@NotNull Consumer<FinishedRecipe> consumer) {
 		Item HAMMER = ForgeRegistries.ITEMS.getValue(new ResourceLocation(MorePlates.MODID, "hammer"));
 
     	ConditionalRecipe.builder()
@@ -44,7 +44,7 @@ public class Recipes extends RecipeProvider implements IConditionBuilder {
             )
         )
         .addRecipe(
-        	ShapedRecipeBuilder.shapedRecipe(HAMMER)
+        	ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, MorePlates.HAMMER)
                 .patternLine("IGI")
                 .patternLine(" S ")
                 .patternLine(" S ")

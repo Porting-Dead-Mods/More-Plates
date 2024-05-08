@@ -4,16 +4,17 @@ import ms55.moreplates.MorePlates;
 import ms55.moreplates.common.enumeration.EnumMaterials;
 import ms55.moreplates.common.util.Groups;
 import ms55.moreplates.common.util.Utils;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.client.model.generators.ModelFile.UncheckedModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class ItemModels extends ItemModelProvider {
 
-	public ItemModels(DataGenerator generator, ExistingFileHelper existingFileHelper) {
-		super(generator, MorePlates.MODID, existingFileHelper);
+	public ItemModels(PackOutput output, String modid, ExistingFileHelper existingFileHelper) {
+		super(output, modid, existingFileHelper);
 	}
 
 	@Override

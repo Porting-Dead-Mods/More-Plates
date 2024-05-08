@@ -1,12 +1,13 @@
 package ms55.moreplates.common.data;
 
-import ms55.moreplates.MorePlates;
+import ms55.moreplates.MorePlates
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
+import net.minecraftforge.data.loading.DatagenModLoader;
+import net.minecraftforge.data.event.GatherDataEvent;
 
 @EventBusSubscriber(modid = MorePlates.MODID, bus = Bus.MOD)
 public class DataGenerators {
@@ -16,17 +17,15 @@ public class DataGenerators {
         DataGenerator generator = event.getGenerator();
         ExistingFileHelper helper = event.getExistingFileHelper();
 
-    	if (event.includeClient()) {
-    		generator.addProvider(new ItemModels(generator, helper));
-    		generator.addProvider(new Language(generator));
-        }
-    	
+    		generator.addProvider(event.includeClient(), new ItemModels(generator.getPackOutput(), MorePlates.,helper));
+    		generator.addProvider(event.includeClient(), new Language(generator));
+
     	if (event.includeServer()) {
-    		generator.addProvider(new Recipes(generator));
+    		generator.addProvider(event.includeServer(), new Recipes(generator));
 
     		BlockTags blockTags = new BlockTags(generator, helper);
-    		generator.addProvider(blockTags);
-    		generator.addProvider(new ItemTags(generator, blockTags, helper));
+    		generator.addProvider(event.includeServer(), blockTags);
+    		generator.addProvider(event.includeServer(), new ItemTags(generator, blockTags, helper));
         }
     }
 }

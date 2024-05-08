@@ -4,11 +4,11 @@ import java.util.Random;
 
 import javax.annotation.Nonnull;
 
-import ms55.moreplates.MorePlates;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import ms55.moreplates.client.config.Config;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 public class HammerItem extends Item {
 
@@ -16,9 +16,8 @@ public class HammerItem extends Item {
 
 	public HammerItem() {
 		super(new Item.Properties()
-				.group(MorePlates.ITEMGROUP)
-                .maxStackSize(1)
-                .maxDamage(150) //Should use config
+                .stacksTo(1)
+                .defaultDurability(Config.GENERAL.DURABILITY_HAMMER.get())
                 .setNoRepair());
 	}
 
@@ -33,7 +32,7 @@ public class HammerItem extends Item {
     }*/
 
     @Override
-    public boolean hasContainerItem(ItemStack stack) {
+    public boolean hasCraftingRemainingItem() {
         return true;
     }
 
@@ -53,7 +52,7 @@ public class HammerItem extends Item {
 	}
 
     @Override
-    public int getItemEnchantability() {
+    public int getEnchantmentValue() {
         return 14;
     }
 

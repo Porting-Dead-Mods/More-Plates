@@ -3,7 +3,7 @@ package ms55.moreplates.common.enumeration;
 import java.util.Locale;
 
 import ms55.moreplates.common.util.Mods;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 
 public enum EnumMaterials {
