@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "com.portingdeadmods.moreplates.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "moreplates.refmap.json",
+  "mixins": [
+    "DeferredRegisterMixin"
+  ],
+  "client": [],
+  "server": [],
+  "minVersion": "0.8"
+}
