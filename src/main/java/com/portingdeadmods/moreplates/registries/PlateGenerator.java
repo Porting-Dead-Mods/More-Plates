@@ -13,7 +13,7 @@ import net.neoforged.neoforge.registries.RegisterEvent;
 public class PlateGenerator {
 
     public static void generatePlateForIngot(ResourceLocation registryName,ResourceLocation id,RegisterEvent event) {
-        if (isIngot(registryName)) {
+        if (isIngot(registryName) && false) {
             String ingotName = id.getPath();
             String plateName = ingotName.replace("ingot", "plate");
 
@@ -23,6 +23,7 @@ public class PlateGenerator {
             //MPItems.ITEMS.register(plateName, () -> new Item(new Item.Properties()));
         }
     }
+
     public static void addCreative(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == MPCreativeTabs.MAIN) {
             BuiltInRegistries.ITEM.stream()
@@ -32,6 +33,6 @@ public class PlateGenerator {
     }
 
     private static boolean isIngot(ResourceLocation id) {
-        return id.getPath().contains("ingot");
+        return id.getPath().contains("_ingot");
     }
 }
