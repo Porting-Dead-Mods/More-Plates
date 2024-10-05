@@ -1,6 +1,7 @@
+
 {
   "required": true,
-  "package": "com.portingdeadmods.moreplates.mixin",
+  "package": "com.portingdeadmods.moreplates.mixins",
   "compatibilityLevel": "JAVA_17",
   "refmap": "moreplates.refmap.json",
   "mixins": [

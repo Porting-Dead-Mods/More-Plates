@@ -9,19 +9,31 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
-@EventBusSubscriber(modid = MorePlatesMod.MODID, bus = EventBusSubscriber.Bus.MOD)
+import java.util.HashSet;
+import java.util.Set;
+
+
+//@EventBusSubscriber(modid = MorePlatesMod.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class MPEvents {
+    /*
     @SubscribeEvent
     public static void onRegisterItems(RegisterEvent event) {
+        Set<String> registeredPlates = new HashSet<>();
+
         event.register(Registries.ITEM, helper -> {
             BuiltInRegistries.ITEM.stream().forEach(item -> {
                 ResourceLocation itemID = BuiltInRegistries.ITEM.getKey(item);
                 if (itemID.getPath().contains("ingot")) {
                     String plateName = itemID.getPath().replace("ingot", "plate");
-                    helper.register(ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID, plateName),
-                            new Item(new Item.Properties()));
+
+                    if (registeredPlates.add(plateName)) {
+                        helper.register(ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID, plateName),
+                                new Item(new Item.Properties()));
+                    }
                 }
             });
         });
     }
+     */
+
 }
