@@ -41,7 +41,7 @@ public class RecipesProvider extends RecipeProvider {
 
                 ShapedRecipeBuilder.shaped(RecipeCategory.MISC, outputItem)
                         .pattern("AB ")
-                        .pattern("A  ")
+                        .pattern("B  ")
                         .define('A', Items.STICK)
                         .define('B', inputItem.getItem())
                         .unlockedBy("has_item", has(inputItem.getItem()))

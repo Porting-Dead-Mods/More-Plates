@@ -1,5 +1,6 @@
 package com.portingdeadmods.moreplates;
 
+import com.portingdeadmods.moreplates.datagen.DynamicDataPack;
 import com.portingdeadmods.moreplates.datagen.DynamicPack;
 import com.portingdeadmods.moreplates.registries.MPCreativeTabs;
 import com.portingdeadmods.moreplates.registries.MPItems;
@@ -23,6 +24,7 @@ public class MorePlatesMod
         MPCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
         modEventBus.addListener(MorePlatesMod::onCreativeTab);
         DynamicPack.init();
+        DynamicDataPack.INSTANCE.register();
     }
 
     public static void onCreativeTab(BuildCreativeModeTabContentsEvent event) {
