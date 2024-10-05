@@ -2,9 +2,12 @@ package com.portingdeadmods.moreplates.datagen;
 
 import com.google.gson.JsonObject;
 import com.portingdeadmods.moreplates.MorePlatesMod;
+import com.portingdeadmods.moreplates.config.MPConfig;
+import com.portingdeadmods.moreplates.utils.TextureUtils;
 import net.mehvahdjukaar.moonlight.api.events.AfterLanguageLoadEvent;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynClientResourcesGenerator;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicTexturePack;
+import net.mehvahdjukaar.moonlight.api.resources.textures.TextureImage;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.repository.Pack;
@@ -32,7 +35,19 @@ public class DynamicPack {
                             .replace(MorePlatesMod.MODID + ":", "")
                             .replace("moreplates.", "");
 
+                    ResourceLocation modelLocation = ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID, rawName);
+                    ResourceLocation textureLocation = ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID, "item/" + rawName);
                     String texture = MorePlatesMod.MODID + ":item/" + rawName;
+
+                    String ingotId = MPConfig.getIngotFromPlate(MorePlatesMod.MODID + ":" + rawName);
+                    if(ingotId != null){
+                        String[] parts = ingotId.split(":", 2);
+                        String itemtNamespace = parts[0];
+                        String itemId = parts[1];
+                        ResourceLocation ingotTexture = ResourceLocation.fromNamespaceAndPath(itemtNamespace, "item/" + itemId);
+                        TextureImage newPlateTexture = TextureUtils.createRecoloredTexture(manager, ingotTexture);
+                        this.dynamicPack.addAndCloseTexture(textureLocation, newPlateTexture);
+                    }
 
                     JsonObject model = new JsonObject();
                     model.addProperty("parent", "item/generated");
@@ -40,11 +55,7 @@ public class DynamicPack {
                     textures.addProperty("layer0", texture);
                     model.add("textures", textures);
 
-                    ResourceLocation modelLocation = ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID, rawName);
-
                     this.dynamicPack.addItemModel(modelLocation, model);
-
-                    System.out.println("Generated model for " + modelLocation + ": " + model);
                 }
             });
         }

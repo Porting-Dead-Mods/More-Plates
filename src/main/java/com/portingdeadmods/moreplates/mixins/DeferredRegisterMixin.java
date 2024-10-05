@@ -1,6 +1,7 @@
 package com.portingdeadmods.moreplates.mixins;
 
 import com.portingdeadmods.moreplates.MorePlatesMod;
+import com.portingdeadmods.moreplates.config.MPConfig;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -50,6 +51,7 @@ public abstract class DeferredRegisterMixin<T> {
             if (!more_Plates$registeredPlates.contains(plateId)) {
                 event.register(Registries.ITEM, plateId, () -> new Item(new Item.Properties()));
                 more_Plates$registeredPlates.add(plateId);
+                MPConfig.saveIngotPlatePair(id.getNamespace() + ":" + id.getPath(), MorePlatesMod.MODID + ":" + ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID, ingotType + "_plate").getPath());
             }
         }
     }
