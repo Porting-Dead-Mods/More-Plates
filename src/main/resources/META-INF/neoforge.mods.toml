@@ -26,5 +26,12 @@ versionRange = "${minecraft_version_range}"
 ordering = "NONE"
 side = "BOTH"
 
+[[dependencies.${ mod_id }]]
+modId = "moonlight"
+type = "required"
+versionRange = "[2.14.23,)"
+ordering = "NONE"
+side = "BOTH"
+
 [[mixins]]
 config = "moreplates.mixin.json"
