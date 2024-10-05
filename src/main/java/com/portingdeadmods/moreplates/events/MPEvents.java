@@ -15,25 +15,5 @@ import java.util.Set;
 
 //@EventBusSubscriber(modid = MorePlatesMod.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class MPEvents {
-    /*
-    @SubscribeEvent
-    public static void onRegisterItems(RegisterEvent event) {
-        Set<String> registeredPlates = new HashSet<>();
-
-        event.register(Registries.ITEM, helper -> {
-            BuiltInRegistries.ITEM.stream().forEach(item -> {
-                ResourceLocation itemID = BuiltInRegistries.ITEM.getKey(item);
-                if (itemID.getPath().contains("ingot")) {
-                    String plateName = itemID.getPath().replace("ingot", "plate");
-
-                    if (registeredPlates.add(plateName)) {
-                        helper.register(ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID, plateName),
-                                new Item(new Item.Properties()));
-                    }
-                }
-            });
-        });
-    }
-     */
 
 }
