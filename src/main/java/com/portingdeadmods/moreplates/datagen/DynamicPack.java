@@ -28,7 +28,16 @@ public class DynamicPack {
 
         @Override
         public void regenerateDynamicAssets(ResourceManager manager) {
-
+            JsonObject model = new JsonObject();
+            BuiltInRegistries.ITEM.forEach((item) -> {
+                if(item.getDescriptionId().contains(MorePlatesMod.MODID)){
+                    String rawName = item.getDescriptionId().replace("moreplates:", "");
+                    String texture = MorePlatesMod.MODID + ":item/" + rawName;
+                    model.addProperty("parent", "item/generated");
+                    model.addProperty("layer0", texture);
+                    this.dynamicPack.addItemModel(ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID, "item/" + rawName), model);
+                }
+            });
         }
 
         @Override
