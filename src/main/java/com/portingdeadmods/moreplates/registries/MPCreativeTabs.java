@@ -17,7 +17,6 @@ public class MPCreativeTabs {
             .title(Component.literal("More Plates"))
             .icon(() -> MPItems.INFINITY_PLATE.get().getDefaultInstance())
             .displayItems((params, output) -> {
-
             })
             .build());
 

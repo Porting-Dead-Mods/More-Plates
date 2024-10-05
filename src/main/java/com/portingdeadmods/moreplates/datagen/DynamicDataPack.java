@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.portingdeadmods.moreplates.MorePlatesMod;
 import com.portingdeadmods.moreplates.config.MPConfig;
+import com.portingdeadmods.moreplates.registries.MPItems;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynServerResourcesGenerator;
 import net.minecraft.advancements.Advancement;
@@ -35,6 +36,8 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
         this.dynamicPack.setGenerateDebugResources(PlatHelper.isDev());
     }
 
+
+
     @Override
     public Logger getLogger() {
         return MorePlatesMod.LOGGER;
@@ -48,7 +51,7 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
     @Override
     public void regenerateDynamicAssets(ResourceManager manager) {
         BuiltInRegistries.ITEM.forEach((item) -> {
-            if (item.getDescriptionId().contains(MorePlatesMod.MODID)) {
+            if (item.getDescriptionId().contains(MorePlatesMod.MODID) && item.getDescriptionId().contains("plate")) {
                 // Get the raw item name without prefixes
                 String rawName = item.getDescriptionId()
                         .replace("item.", "")
@@ -65,10 +68,12 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
                 ItemStack inputItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(namespace,path)).getDefaultInstance();
 
                 Item ingot = inputItem.getItem();
+                Item hammer = MPItems.HAMMER.get();
+                hammer.damageItem(MPItems.HAMMER.toStack(), 1, null, null);
                 ShapedRecipeBuilder recipeBuilder = ShapedRecipeBuilder.shaped(RecipeCategory.MISC, item)
                         .pattern("AB")
                         .pattern("B ")
-                        .define('A', Items.STICK)
+                        .define('A', hammer)
                         .define('B', ingot)
                         .unlockedBy("has_item", InventoryChangeTrigger.TriggerInstance.hasItems(ingot));
 

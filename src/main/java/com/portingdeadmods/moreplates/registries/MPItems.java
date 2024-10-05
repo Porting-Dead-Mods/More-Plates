@@ -11,4 +11,5 @@ public class MPItems {
 
     public static final DeferredItem<Item> INFINITY_PLATE = ITEMS.register("infinity_plate", () -> new Item(new Item.Properties()));
 
+    public static final DeferredItem<Item> HAMMER = ITEMS.register("hammer", () -> new Item(new Item.Properties().stacksTo(1).durability(256)));
 }

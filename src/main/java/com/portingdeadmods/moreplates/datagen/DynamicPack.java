@@ -29,28 +29,11 @@ public class DynamicPack {
         @Override
         public void regenerateDynamicAssets(ResourceManager manager) {
             BuiltInRegistries.ITEM.forEach((item) -> {
-                if (item.getDescriptionId().contains(MorePlatesMod.MODID)) {
+                if (item.getDescriptionId().contains(MorePlatesMod.MODID) && item.getDescriptionId().contains("plate")) {
                     String rawName = item.getDescriptionId()
                             .replace("item.", "")
                             .replace(MorePlatesMod.MODID + ":", "")
                             .replace("moreplates.", "");
-
-                    /*
-                    String fullName = MorePlatesMod.MODID+":"+rawName;
-                    JsonObject recipe = new JsonObject();
-                    recipe.addProperty("type", "minecraft:crafting_shaped");
-                    JsonObject key = new JsonObject();
-                    JsonObject pattern = new JsonObject();
-                    //A is a stick and B is the ingot, the plate is the result
-                    key.addProperty("A", "minecraft:stick");
-                    key.addProperty("B", MPConfig.getIngotFromPlate(fullName));
-                    pattern.addProperty("pattern", "ABA");
-                    recipe.add("key", key);
-                    recipe.add("pattern", pattern);
-                    JsonObject result = new JsonObject();
-                    result.addProperty("item", fullName);
-                    recipe.add("result", result);
-                    */
 
                     ResourceLocation modelLocation = ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID, rawName);
                     ResourceLocation textureLocation = ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID, "item/" + rawName);
@@ -61,9 +44,9 @@ public class DynamicPack {
                     String ingotId = MPConfig.getIngotFromPlate(MorePlatesMod.MODID + ":" + rawName);
                     if(ingotId != null){
                         String[] parts = ingotId.split(":", 2);
-                        String itemtNamespace = parts[0];
+                        String itemNamespace = parts[0];
                         String itemId = parts[1];
-                        ResourceLocation ingotTexture = ResourceLocation.fromNamespaceAndPath(itemtNamespace, "item/" + itemId);
+                        ResourceLocation ingotTexture = ResourceLocation.fromNamespaceAndPath(itemNamespace, "item/" + itemId);
                         TextureImage newPlateTexture = TextureUtils.createRecoloredTexture(manager, ingotTexture);
                         this.dynamicPack.addAndCloseTexture(textureLocation, newPlateTexture);
                     }
