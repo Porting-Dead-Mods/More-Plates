@@ -13,7 +13,19 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-//@EventBusSubscriber(modid = MorePlatesMod.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = MorePlatesMod.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class MPEvents {
-
+    @SubscribeEvent
+    public static void onRegisterItems(RegisterEvent event) {
+        event.register(Registries.ITEM, helper -> {
+            BuiltInRegistries.ITEM.stream().forEach(item -> {
+                ResourceLocation itemID = BuiltInRegistries.ITEM.getKey(item);
+                if (itemID.getPath().contains("ingot") && item.getDescriptionId().contains("minecraft")) {
+                    String plateName = itemID.getPath().replace("ingot", "plate");
+                    helper.register(ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID, plateName),
+                            new Item(new Item.Properties()));
+                }
+            });
+        });
+    }
 }
