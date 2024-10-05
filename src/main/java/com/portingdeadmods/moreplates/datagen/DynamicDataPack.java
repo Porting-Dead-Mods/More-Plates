@@ -68,12 +68,10 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
                 ItemStack inputItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(namespace,path)).getDefaultInstance();
 
                 Item ingot = inputItem.getItem();
-                Item hammer = MPItems.HAMMER.get();
-                hammer.damageItem(MPItems.HAMMER.toStack(), 1, null, null);
                 ShapedRecipeBuilder recipeBuilder = ShapedRecipeBuilder.shaped(RecipeCategory.MISC, item)
                         .pattern("AB")
                         .pattern("B ")
-                        .define('A', hammer)
+                        .define('A', MPItems.HAMMER)
                         .define('B', ingot)
                         .unlockedBy("has_item", InventoryChangeTrigger.TriggerInstance.hasItems(ingot));
 

@@ -1,6 +1,7 @@
 package com.portingdeadmods.moreplates.registries;
 
 import com.portingdeadmods.moreplates.MorePlatesMod;
+import com.portingdeadmods.moreplates.content.items.HammerItem;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -11,5 +12,5 @@ public class MPItems {
 
     public static final DeferredItem<Item> INFINITY_PLATE = ITEMS.register("infinity_plate", () -> new Item(new Item.Properties()));
 
-    public static final DeferredItem<Item> HAMMER = ITEMS.register("hammer", () -> new Item(new Item.Properties().stacksTo(1).durability(256)));
+    public static final DeferredItem<HammerItem> HAMMER = ITEMS.register("hammer", () -> new HammerItem(new Item.Properties()));
 }
