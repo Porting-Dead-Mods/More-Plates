@@ -35,9 +35,28 @@ public class DynamicPack {
                             .replace(MorePlatesMod.MODID + ":", "")
                             .replace("moreplates.", "");
 
+                    /*
+                    String fullName = MorePlatesMod.MODID+":"+rawName;
+                    JsonObject recipe = new JsonObject();
+                    recipe.addProperty("type", "minecraft:crafting_shaped");
+                    JsonObject key = new JsonObject();
+                    JsonObject pattern = new JsonObject();
+                    //A is a stick and B is the ingot, the plate is the result
+                    key.addProperty("A", "minecraft:stick");
+                    key.addProperty("B", MPConfig.getIngotFromPlate(fullName));
+                    pattern.addProperty("pattern", "ABA");
+                    recipe.add("key", key);
+                    recipe.add("pattern", pattern);
+                    JsonObject result = new JsonObject();
+                    result.addProperty("item", fullName);
+                    recipe.add("result", result);
+                    */
+
                     ResourceLocation modelLocation = ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID, rawName);
                     ResourceLocation textureLocation = ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID, "item/" + rawName);
                     String texture = MorePlatesMod.MODID + ":item/" + rawName;
+                    String doubleTexture = MorePlatesMod.MODID + ":item/double_sign";
+                    String hotSignTexture = MorePlatesMod.MODID + ":item/hot_sign";
 
                     String ingotId = MPConfig.getIngotFromPlate(MorePlatesMod.MODID + ":" + rawName);
                     if(ingotId != null){
@@ -53,8 +72,14 @@ public class DynamicPack {
                     model.addProperty("parent", "item/generated");
                     JsonObject textures = new JsonObject();
                     textures.addProperty("layer0", texture);
+                    if(rawName.contains("double") && !rawName.contains("hot")){
+                        textures.addProperty("layer1", doubleTexture);
+                    }
+                    if(rawName.contains("hot") && !rawName.contains("double")){
+                        textures.addProperty("layer1", hotSignTexture);
+                    }
                     model.add("textures", textures);
-
+                    //Recipes
                     this.dynamicPack.addItemModel(modelLocation, model);
                 }
             });

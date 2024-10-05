@@ -18,7 +18,7 @@ public class MPEvents {
         event.register(Registries.ITEM, helper -> {
             BuiltInRegistries.ITEM.stream().forEach(item -> {
                 ResourceLocation itemID = BuiltInRegistries.ITEM.getKey(item);
-                if (itemID.getPath().contains("ingot") && item.getDescriptionId().contains("minecraft")) {
+                if (itemID.getPath().contains("ingot") && item.getDescriptionId().contains("minecraft") && !itemID.getPath().contains("block")) {
                     String plateName = itemID.getPath().replace("ingot", "plate");
                     helper.register(ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID, plateName),
                             new Item(new Item.Properties()));

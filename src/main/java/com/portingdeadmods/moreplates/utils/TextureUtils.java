@@ -6,7 +6,6 @@ import net.mehvahdjukaar.moonlight.api.resources.textures.Respriter;
 import net.mehvahdjukaar.moonlight.api.resources.textures.TextureImage;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.neoforged.fml.common.Mod;
 
 public class TextureUtils {
     public static TextureImage createRecoloredTexture(ResourceManager manager, ResourceLocation ingotTexture) {

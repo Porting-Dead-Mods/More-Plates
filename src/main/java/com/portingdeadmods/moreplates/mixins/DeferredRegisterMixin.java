@@ -41,7 +41,7 @@ public abstract class DeferredRegisterMixin<T> {
 
     @Unique
     private static void more_Plates$onRegistryObjectCreated(ResourceLocation registryName, ResourceLocation id, RegisterEvent event) {
-        if (registryName.getPath().contains("item") && id.getPath().contains("ingot")) {
+        if (registryName.getPath().contains("item") && id.getPath().contains("ingot") && !id.getPath().contains("block")) {
             String ingotType = id.getPath()
                     .replaceFirst("^ingot_", "")
                     .replaceFirst("_ingot$", "");

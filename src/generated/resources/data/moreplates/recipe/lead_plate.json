@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "minecraft:stick"
+    },
+    "B": {
+      "item": "mekanism:ingot_lead"
+    }
+  },
+  "pattern": [
+    "AB ",
+    "A  "
+  ],
+  "result": {
+    "count": 1,
+    "id": "moreplates:lead_plate"
+  }
+}

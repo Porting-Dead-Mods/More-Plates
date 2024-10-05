@@ -46,27 +46,37 @@ public class MPConfig {
 
     public static void saveIngotPlatePair(String ingotId, String plateId) {
         String pairKey = ingotId + ":" + plateId;
+
+        // Only save if the pair doesn't already exist
         if (!registeredIngotPlatePairs.contains(pairKey)) {
             registeredIngotPlatePairs.add(pairKey);
             ingotToPlateMap.put(ingotId, plateId); // Update mapping
             plateToIngotMap.put(plateId, ingotId); // Update mapping
 
+            // Create the JSON object to save all pairs
             JsonObject json = new JsonObject();
             JsonArray pairsArray = new JsonArray();
 
+            // Iterate over each unique pair in registeredIngotPlatePairs
             for (String pair : registeredIngotPlatePairs) {
-                JsonObject pairObject = new JsonObject();
-                String[] ids = pair.split(":", 2);
-                String ingot = ids[0];
-                String plate = ids[1];
+                int colonIndex = pair.indexOf(':');
+                String ingot = pair.substring(0, colonIndex); // First part before the first colon
+                String remaining = pair.substring(colonIndex + 1); // Everything after the first colon
 
-                pairObject.addProperty("ingot", ingot);
-                pairObject.addProperty("plate", plate);
+                // Now split the remaining string at the next colon
+                colonIndex = remaining.indexOf(':');
+                ingotId = remaining.substring(0, colonIndex); // Ingot id part
+                plateId = remaining.substring(colonIndex + 1); // Plate id part
+
+                JsonObject pairObject = new JsonObject();
+                pairObject.addProperty("ingot", ingot + ":" + ingotId); // Full ingot
+                pairObject.addProperty("plate", plateId); // Plate part
                 pairsArray.add(pairObject);
             }
 
             json.add("ingot_plate_pairs", pairsArray);
 
+            // Write the updated JSON to the file
             try (FileWriter writer = new FileWriter(configFile)) {
                 gson.toJson(json, writer);
             } catch (IOException e) {
