@@ -7,7 +7,6 @@ import com.portingdeadmods.moreplates.MorePlatesMod;
 import com.portingdeadmods.moreplates.config.MPConfig;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynServerResourcesGenerator;
-import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicTexturePack;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
@@ -68,7 +67,7 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
                 Item ingot = inputItem.getItem();
                 ShapedRecipeBuilder recipeBuilder = ShapedRecipeBuilder.shaped(RecipeCategory.MISC, item)
                         .pattern("AB")
-                        .pattern("A ")
+                        .pattern("B ")
                         .define('A', Items.STICK)
                         .define('B', ingot)
                         .unlockedBy("has_item", InventoryChangeTrigger.TriggerInstance.hasItems(ingot));
@@ -81,7 +80,7 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
 
                     @Override
                     public void accept(ResourceLocation resourceLocation, Recipe<?> recipe, @Nullable AdvancementHolder advancementHolder, ICondition... iConditions) {
-                        dynamicPack.addRecipe(recipe);
+                        dynamicPack.addRecipe(recipe, resourceLocation);
                     }
                 });
 
