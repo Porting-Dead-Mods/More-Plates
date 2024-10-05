@@ -1,7 +1,6 @@
 package com.portingdeadmods.moreplates.mixin;
 
-import com.portingdeadmods.moreplates.content.PlateGenerator;
-import net.minecraft.world.item.Item;
+import com.portingdeadmods.moreplates.registries.PlateGenerator;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.RegisterEvent;
@@ -24,8 +23,9 @@ public class DeferredRegisterMixin<T> {
     // Inject at the start of the addEntries method to ensure we are in the correct phase
     @Inject(method = "addEntries", at = @At("HEAD"))
     private void onAddEntries(RegisterEvent event, CallbackInfo ci) {
-        // Call generatePlates during the registration event phase
-        PlateGenerator.generatePlates(event);
+        for (Map.Entry<DeferredHolder<T, ? extends T>, Supplier<? extends T>> entry : entries.entrySet()) {
+            PlateGenerator.generatePlateForIngot(entry.getKey().getKey().registry(), entry.getKey().getId(), event);
+        }
     }
 }
 
