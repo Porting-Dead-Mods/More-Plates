@@ -40,7 +40,7 @@ public class DynamicPack {
                     textures.addProperty("layer0", texture);
                     model.add("textures", textures);
 
-                    ResourceLocation modelLocation = ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID, "item/" + rawName); // Correct filename
+                    ResourceLocation modelLocation = ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID, rawName);
 
                     this.dynamicPack.addItemModel(modelLocation, model);
 
@@ -48,9 +48,6 @@ public class DynamicPack {
                 }
             });
         }
-
-
-
 
         @Override
         public void addDynamicTranslations(AfterLanguageLoadEvent languageEvent) {

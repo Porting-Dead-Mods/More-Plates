@@ -3,6 +3,8 @@ package com.portingdeadmods.moreplates;
 import com.portingdeadmods.moreplates.datagen.DynamicPack;
 import com.portingdeadmods.moreplates.registries.MPCreativeTabs;
 import com.portingdeadmods.moreplates.registries.MPItems;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,9 +19,18 @@ public class MorePlatesMod
     public static final Logger LOGGER = LogManager.getLogger(MODID);
 
     public MorePlatesMod(IEventBus modEventBus, ModContainer modContainer) {
-        MPCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
         MPItems.ITEMS.register(modEventBus);
+        MPCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
+        modEventBus.addListener(MorePlatesMod::onCreativeTab);
         DynamicPack.init();
+    }
+
+    public static void onCreativeTab(BuildCreativeModeTabContentsEvent event) {
+        if(event.getTab() == MPCreativeTabs.MORE_PLATES_TAB.get()){
+            BuiltInRegistries.ITEM.stream()
+                    .filter(rs -> rs.getDescriptionId().contains(MorePlatesMod.MODID))
+                    .forEach(rs -> event.accept(rs.asItem()));
+        }
     }
 
 }

@@ -17,9 +17,7 @@ public class MPCreativeTabs {
             .title(Component.literal("More Plates"))
             .icon(() -> MPItems.INFINITY_PLATE.get().getDefaultInstance())
             .displayItems((params, output) -> {
-                BuiltInRegistries.ITEM.stream()
-                        .filter(rs -> rs.getDescriptionId().contains(MorePlatesMod.MODID))
-                        .forEach(rs -> output.accept(rs.asItem()));
+
             })
             .build());
 

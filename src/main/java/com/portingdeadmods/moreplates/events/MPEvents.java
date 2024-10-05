@@ -1,6 +1,7 @@
 package com.portingdeadmods.moreplates.events;
 
 import com.portingdeadmods.moreplates.MorePlatesMod;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
