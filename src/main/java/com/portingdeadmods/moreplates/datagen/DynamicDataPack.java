@@ -51,29 +51,21 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
     @Override
     public void regenerateDynamicAssets(ResourceManager manager) {
         BuiltInRegistries.ITEM.forEach((item) -> {
-            if (item.getDescriptionId().contains(MorePlatesMod.MODID) && item.getDescriptionId().contains("plate")) {
+            ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(item);
+            if (MorePlatesMod.MODID.equals(itemId.getNamespace()) && itemId.getPath().contains("plate")) {
                 // Get the raw item name without prefixes
-                String rawName = item.getDescriptionId()
-                        .replace("item.", "")
-                        .replace(MorePlatesMod.MODID + ":", "")
-                        .replace("moreplates.", "");
+                String rawName = itemId.getPath();
 
-                String fullName = MorePlatesMod.MODID + ":" + rawName;
-                String fullNameOutput = MorePlatesMod.MODID+":"+rawName;
-                String fullNameInput = MPConfig.getIngotFromPlate(fullNameOutput);
-                if(fullNameInput == null) return;
-                String namespace = fullNameInput.split(":")[0];
-                String path = fullNameInput.split(":")[1];
+                ResourceLocation inputIngot = MPConfig.getIngotFromPlate(itemId);
+                if(inputIngot == null) return;
 
-                ItemStack inputItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(namespace,path)).getDefaultInstance();
-
-                Item ingot = inputItem.getItem();
+                Item inputItem = BuiltInRegistries.ITEM.get(inputIngot);
                 ShapedRecipeBuilder recipeBuilder = ShapedRecipeBuilder.shaped(RecipeCategory.MISC, item)
                         .pattern("AB")
                         .pattern("B ")
                         .define('A', MPItems.HAMMER)
-                        .define('B', ingot)
-                        .unlockedBy("has_item", InventoryChangeTrigger.TriggerInstance.hasItems(ingot));
+                        .define('B', inputItem)
+                        .unlockedBy("has_item", InventoryChangeTrigger.TriggerInstance.hasItems(inputItem));
 
                 recipeBuilder.save(new RecipeOutput() {
                     @Override
