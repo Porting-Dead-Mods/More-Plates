@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class HammerItem extends Item {
     public HammerItem(Properties properties) {
-        super(properties);
+        super(properties.durability(128));
     }
 
     @Override
@@ -15,14 +15,33 @@ public class HammerItem extends Item {
     }
 
     @Override
-    public int getMaxDamage(ItemStack stack) {
-        return 128;
+    public boolean isDamageable(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean isBarVisible(ItemStack stack) {
+        return stack.isDamaged();
+    }
+
+    @Override
+    public int getBarColor(ItemStack stack) {
+        return 0x0000FF + (0xFF0000 - 0x0000FF) * stack.getDamageValue() / stack.getMaxDamage();
     }
 
     @Override
     public @NotNull ItemStack getCraftingRemainingItem(ItemStack itemStack) {
-        ItemStack result = itemStack.copy();
-        result.setDamageValue(result.getDamageValue() + 1);
-        return result;
+        ItemStack hammer = itemStack.copy();
+        int newDamage = hammer.getDamageValue() + 1;
+        if (newDamage >= hammer.getMaxDamage()) {
+            return ItemStack.EMPTY;
+        }
+        hammer.setDamageValue(newDamage);
+        return hammer;
+    }
+
+    @Override
+    public boolean hasCraftingRemainingItem(ItemStack stack) {
+        return true;
     }
 }

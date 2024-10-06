@@ -8,7 +8,7 @@ public class RGBColorUtil {
         LABColor lab = color.asLAB();
         LABColor pureRed = new RGBColor(1,0,0,1).asLAB();
 
-        lab.mixWith(pureRed, 0.2f);
+        // lab.mixWith(pureRed, 0.2f);
 
         lab.withLuminance(0.4f);
         return lab.asRGB();
