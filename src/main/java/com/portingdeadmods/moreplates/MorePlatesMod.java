@@ -33,10 +33,11 @@ public class MorePlatesMod
     }
 
     public static void onCreativeTab(BuildCreativeModeTabContentsEvent event) {
-        if(event.getTab() == MPCreativeTabs.MORE_PLATES_TAB.get()){
+        if (event.getTab() == MPCreativeTabs.MORE_PLATES_TAB.get()) {
             BuiltInRegistries.ITEM.stream()
-                    .filter(rs -> rs.getDescriptionId().contains(MorePlatesMod.MODID))
-                    .forEach(rs -> event.accept(rs.asItem()));
+                    .filter(item -> item.getDescriptionId().contains(MorePlatesMod.MODID) && !item.equals(MPItems.HAMMER.get()))
+                    .forEach(item -> event.accept(item.asItem()));
+            event.accept(MPItems.HAMMER.get().asItem());
         }
     }
 

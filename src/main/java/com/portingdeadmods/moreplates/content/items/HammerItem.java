@@ -25,11 +25,6 @@ public class HammerItem extends Item {
     }
 
     @Override
-    public int getBarColor(ItemStack stack) {
-        return 0x0000FF + (0xFF0000 - 0x0000FF) * stack.getDamageValue() / stack.getMaxDamage();
-    }
-
-    @Override
     public @NotNull ItemStack getCraftingRemainingItem(ItemStack itemStack) {
         ItemStack hammer = itemStack.copy();
         int newDamage = hammer.getDamageValue() + 1;

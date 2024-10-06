@@ -14,8 +14,6 @@ public class MPItems {
 
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MorePlatesMod.MODID);
 
-    public static final DeferredItem<Item> INFINITY_PLATE = ITEMS.register("infinity_plate", () -> new Item(new Item.Properties()));
-
     public static final DeferredItem<HammerItem> HAMMER = ITEMS.register("hammer", () -> new HammerItem(new Item.Properties()));
 
     public static void registerCustomItems(List<String> customItems) {
@@ -25,19 +23,16 @@ public class MPItems {
                 String namespace = parts[0];
                 String itemID = parts[1];
 
-                // Register Plate
                 String plateId = itemID + "_plate";
                 DeferredItem<Item> plate = ITEMS.register(plateId,
                         () -> new Item(new Item.Properties()));
                 MPConfig.saveIngotPlatePair(ResourceLocation.parse(namespace + ":" + itemID), ResourceLocation.parse(MorePlatesMod.MODID + ":" + plateId));
 
-                // Register Gear
                 String gearId = itemID + "_gear";
                 DeferredItem<Item> gear = ITEMS.register(gearId,
                         () -> new Item(new Item.Properties()));
                 MPConfig.saveIngotGearPair(ResourceLocation.parse(namespace + ":" + itemID), ResourceLocation.parse(MorePlatesMod.MODID + ":" + gearId));
 
-                // Register Rod
                 String rodId = itemID + "_rod";
                 DeferredItem<Item> rod = ITEMS.register(rodId,
                         () -> new Item(new Item.Properties()));

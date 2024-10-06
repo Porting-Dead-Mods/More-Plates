@@ -4,7 +4,9 @@ import com.portingdeadmods.moreplates.MorePlatesMod;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -15,7 +17,7 @@ public class MPCreativeTabs {
 
     public static final Supplier<CreativeModeTab> MORE_PLATES_TAB = CREATIVE_MODE_TABS.register("moreplatestab", () -> CreativeModeTab.builder()
             .title(Component.literal("More Plates"))
-            .icon(() -> MPItems.INFINITY_PLATE.get().getDefaultInstance())
+            .icon(() -> BuiltInRegistries.ITEM.get(ResourceLocation.parse("moreplates:gold_plate")).getDefaultInstance())
             .displayItems((params, output) -> {
             })
             .build());
