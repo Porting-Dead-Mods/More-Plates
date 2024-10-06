@@ -35,7 +35,7 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
     public DynamicDataPack() {
         super(new net.mehvahdjukaar.moonlight.api.resources.pack.DynamicDataPack(ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID,"generated_pack"), Pack.Position.TOP, false, false));
         this.dynamicPack.setGenerateDebugResources(PlatHelper.isDev());
-        this.dynamicPack.addNamespaces(MorePlatesMod.MODID, "c");
+        this.dynamicPack.addNamespaces("c");
     }
 
 
@@ -71,7 +71,7 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
 
                 SimpleTagBuilder tagBuilder = SimpleTagBuilder.of(ResourceLocation.fromNamespaceAndPath("c", "plates/"+rawName.replace("_plate", "")));
                 tagBuilder.addEntry(item);
-                this.dynamicPack.addTag(tagBuilder, Registries.ITEM);
+                dynamicPack.addTag(tagBuilder, Registries.ITEM);
                 System.out.println("Adding tag: "+tagBuilder.getId() + " with entry: "+item);
 
                 Item ingot = inputItem.getItem();
