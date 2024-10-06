@@ -1,10 +1,13 @@
-package com.portingdeadmods.moreplates.datagen;
-
+package com.portingdeadmods.moreplates.datagen.compat;
+import aztech.modern_industrialization.machines.init.MIMachineRecipeTypes;
+import aztech.modern_industrialization.machines.recipe.MachineRecipeBuilder;
+import aztech.modern_industrialization.machines.recipe.MachineRecipeType;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.portingdeadmods.moreplates.MorePlatesMod;
 import com.portingdeadmods.moreplates.config.MPConfig;
+import com.portingdeadmods.moreplates.datagen.DynamicDataPack;
 import com.portingdeadmods.moreplates.registries.MPItems;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.resources.SimpleTagBuilder;
@@ -22,19 +25,19 @@ import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class DynamicDataPack extends DynServerResourcesGenerator {
+public class MIDynamicDataPack extends DynServerResourcesGenerator {
 
-    public static final DynamicDataPack INSTANCE = new DynamicDataPack();
+    public static final MIDynamicDataPack INSTANCE = new MIDynamicDataPack();
 
-    public DynamicDataPack() {
-        super(new net.mehvahdjukaar.moonlight.api.resources.pack.DynamicDataPack(ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID,"generated_pack"), Pack.Position.TOP, false, false));
+    public MIDynamicDataPack() {
+        super(new net.mehvahdjukaar.moonlight.api.resources.pack.DynamicDataPack(ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID,"mi_generated_pack"), Pack.Position.TOP, false, false));
         this.dynamicPack.setGenerateDebugResources(PlatHelper.isDev());
-        this.dynamicPack.addNamespaces("c");
     }
 
     @Override
@@ -60,21 +63,11 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
 
                 Item inputItem = BuiltInRegistries.ITEM.get(inputIngot);
 
-                SimpleTagBuilder tagBuilder = SimpleTagBuilder.of(ResourceLocation.fromNamespaceAndPath("c", "plates/" + rawName.replace("_plate", "")));
-                SimpleTagBuilder generalTagBuilder = SimpleTagBuilder.of(ResourceLocation.fromNamespaceAndPath("c", "plates"));
-                tagBuilder.addEntry(item);
-                generalTagBuilder.addEntry(item);
-                dynamicPack.addTag(tagBuilder, Registries.ITEM);
-                dynamicPack.addTag(generalTagBuilder, Registries.ITEM);
+                MachineRecipeBuilder recipeBuilder = new MachineRecipeBuilder(MIMachineRecipeTypes.COMPRESSOR, 16, 100)
+                        .addItemInput((ItemLike) inputItem,1)
+                        .addItemOutput(item, 1);
 
-                ShapedRecipeBuilder recipeBuilder = ShapedRecipeBuilder.shaped(RecipeCategory.MISC, item)
-                        .pattern("AB")
-                        .pattern("B ")
-                        .define('A', MPItems.HAMMER)
-                        .define('B', inputItem)
-                        .unlockedBy("has_item", InventoryChangeTrigger.TriggerInstance.hasItems(inputItem));
-
-                recipeBuilder.save(new RecipeOutput() {
+                recipeBuilder.offerTo(new RecipeOutput() {
                     @Override
                     public Advancement.@NotNull Builder advancement() {
                         return Advancement.Builder.advancement();
@@ -84,7 +77,7 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
                     public void accept(@NotNull ResourceLocation resourceLocation, @NotNull Recipe<?> recipe, @Nullable AdvancementHolder advancementHolder, ICondition... iConditions) {
                         dynamicPack.addRecipe(recipe, resourceLocation);
                     }
-                });
+                },"compressor/moreplates/"+itemId.getPath());
             }
 
             // Gears
@@ -95,21 +88,11 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
 
                 Item inputItem = BuiltInRegistries.ITEM.get(inputIngot);
 
-                SimpleTagBuilder tagBuilder = SimpleTagBuilder.of(ResourceLocation.fromNamespaceAndPath("c", "gears/" + rawName.replace("_gear", "")));
-                SimpleTagBuilder generalTagBuilder = SimpleTagBuilder.of(ResourceLocation.fromNamespaceAndPath("c", "gears"));
-                tagBuilder.addEntry(item);
-                generalTagBuilder.addEntry(item);
-                dynamicPack.addTag(tagBuilder, Registries.ITEM);
-                dynamicPack.addTag(generalTagBuilder, Registries.ITEM);
+                MachineRecipeBuilder recipeBuilder = new MachineRecipeBuilder(MIMachineRecipeTypes.ASSEMBLER, 16, 100)
+                        .addItemInput((ItemLike) inputItem,4)
+                        .addItemOutput(item, 1);
 
-                ShapedRecipeBuilder recipeBuilder = ShapedRecipeBuilder.shaped(RecipeCategory.MISC, item)
-                        .pattern(" I ")
-                        .pattern("I I")
-                        .pattern(" I ")
-                        .define('I', inputItem)
-                        .unlockedBy("has_item", InventoryChangeTrigger.TriggerInstance.hasItems(inputItem));
-
-                recipeBuilder.save(new RecipeOutput() {
+                recipeBuilder.offerTo(new RecipeOutput() {
                     @Override
                     public Advancement.@NotNull Builder advancement() {
                         return Advancement.Builder.advancement();
@@ -119,7 +102,7 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
                     public void accept(@NotNull ResourceLocation resourceLocation, @NotNull Recipe<?> recipe, @Nullable AdvancementHolder advancementHolder, ICondition... iConditions) {
                         dynamicPack.addRecipe(recipe, resourceLocation);
                     }
-                });
+                },"assembler/moreplates/"+itemId.getPath());
             }
 
             // Rods
@@ -130,12 +113,6 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
 
                 Item inputItem = BuiltInRegistries.ITEM.get(inputIngot);
 
-                SimpleTagBuilder tagBuilder = SimpleTagBuilder.of(ResourceLocation.fromNamespaceAndPath("c", "rods/" + rawName.replace("_rod", "")));
-                SimpleTagBuilder generalTagBuilder = SimpleTagBuilder.of(ResourceLocation.fromNamespaceAndPath("c", "rods"));
-                tagBuilder.addEntry(item);
-                generalTagBuilder.addEntry(item);
-                dynamicPack.addTag(tagBuilder, Registries.ITEM);
-                dynamicPack.addTag(generalTagBuilder, Registries.ITEM);
 
                 ShapedRecipeBuilder recipeBuilder = ShapedRecipeBuilder.shaped(RecipeCategory.MISC, item, 2)
                         .pattern("H")
@@ -158,25 +135,8 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
                 });
             }
 
-            if(MorePlatesMod.MODID.equals(itemId.getNamespace())){
-                if(itemId.getPath().contains("plate")){
-                    ResourceLocation originalItem = MPConfig.getIngotFromPlate(itemId);
-                    SimpleTagBuilder tagBuilder = SimpleTagBuilder.of(ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID,"mods/"+originalItem.getNamespace()));
-                    tagBuilder.addEntry(item);
-                    dynamicPack.addTag(tagBuilder, Registries.ITEM);
-                }else if(itemId.getPath().contains("gear")){
-                    ResourceLocation originalItem = MPConfig.getIngotFromGear(itemId);
-                    SimpleTagBuilder tagBuilder = SimpleTagBuilder.of(ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID,"mods/"+originalItem.getNamespace()));
-                    tagBuilder.addEntry(item);
-                    dynamicPack.addTag(tagBuilder, Registries.ITEM);
-                }else if(itemId.getPath().contains("rod")){
-                    ResourceLocation originalItem = MPConfig.getIngotFromRod(itemId);
-                    SimpleTagBuilder tagBuilder = SimpleTagBuilder.of(ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID,"mods/"+originalItem.getNamespace()));
-                    tagBuilder.addEntry(item);
-                    dynamicPack.addTag(tagBuilder, Registries.ITEM);
-                }
-            }
         });
+
     }
 
     private static void removeNullEntries(JsonObject jsonObject) {
@@ -208,3 +168,4 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
         jsonArray.addAll(newArray);
     }
 }
+

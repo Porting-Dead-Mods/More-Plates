@@ -3,9 +3,11 @@ package com.portingdeadmods.moreplates;
 import com.portingdeadmods.moreplates.config.MPConfig;
 import com.portingdeadmods.moreplates.datagen.DynamicDataPack;
 import com.portingdeadmods.moreplates.datagen.DynamicResourcePack;
+import com.portingdeadmods.moreplates.datagen.compat.MIDynamicDataPack;
 import com.portingdeadmods.moreplates.registries.MPCreativeTabs;
 import com.portingdeadmods.moreplates.registries.MPItems;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import org.apache.logging.log4j.LogManager;
@@ -30,6 +32,12 @@ public class MorePlatesMod
         modEventBus.addListener(MorePlatesMod::onCreativeTab);
         DynamicResourcePack.init();
         DynamicDataPack.INSTANCE.register();
+        /*
+        if(ModList.get().isLoaded("modern_industrialization")) {
+            LOGGER.info("Modern Industrialization detected, adding compatibility");
+            MIDynamicDataPack.INSTANCE.register();
+        }
+         */
     }
 
     public static void onCreativeTab(BuildCreativeModeTabContentsEvent event) {

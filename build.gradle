@@ -117,7 +117,7 @@ configurations {
 dependencies {
     runtimeOnly "curse.maven:mekanism-268560:5680395"
     runtimeOnly "curse.maven:cloth-config-348521:5729127"
-    runtimeOnly "curse.maven:modern-industrialization-405388:5729622"
+    implementation "curse.maven:modern-industrialization-405388:5729622"
     runtimeOnly "curse.maven:mystical-agriculture-246640:5774649"
     runtimeOnly "curse.maven:cucumber-272335:5774468"
     runtimeOnly "curse.maven:jei-238222:5781938"
