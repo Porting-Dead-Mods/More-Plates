@@ -5,7 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 public class IngotUtil {
     public static boolean isValidIngot(ResourceLocation location, boolean onlyVanilla) {
         String path = location.getPath();
-        return path.contains("ingot") && !path.contains("block") && (!onlyVanilla || "minecraft".equals(location.getNamespace()));
+        return (path.startsWith("ingot_") || path.endsWith("_ingot")) && !path.contains("block") && (!onlyVanilla || "minecraft".equals(location.getNamespace()));
     }
 
     public static String getIngotType(ResourceLocation itemId) {

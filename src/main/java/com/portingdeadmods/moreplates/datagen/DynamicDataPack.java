@@ -3,6 +3,7 @@ package com.portingdeadmods.moreplates.datagen;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Decoder;
 import com.portingdeadmods.moreplates.MorePlatesMod;
 import com.portingdeadmods.moreplates.config.MPConfig;
 import com.portingdeadmods.moreplates.registries.MPItems;
@@ -21,6 +22,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import org.apache.logging.log4j.Logger;
@@ -34,6 +36,7 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
     public DynamicDataPack() {
         super(new net.mehvahdjukaar.moonlight.api.resources.pack.DynamicDataPack(ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID,"generated_pack"), Pack.Position.TOP, false, false));
         this.dynamicPack.setGenerateDebugResources(PlatHelper.isDev());
+        this.dynamicPack.addNamespaces("c");
     }
 
     @Override
@@ -155,6 +158,25 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
                         dynamicPack.addRecipe(recipe, resourceLocation);
                     }
                 });
+            }
+
+            if(MorePlatesMod.MODID.equals(itemId.getNamespace())){
+                if(itemId.getPath().contains("plate")){
+                    ResourceLocation originalItem = MPConfig.getIngotFromPlate(itemId);
+                    SimpleTagBuilder tagBuilder = SimpleTagBuilder.of(ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID,"mods/"+originalItem.getNamespace()));
+                    tagBuilder.addEntry(item);
+                    dynamicPack.addTag(tagBuilder, Registries.ITEM);
+                }else if(itemId.getPath().contains("gear")){
+                    ResourceLocation originalItem = MPConfig.getIngotFromGear(itemId);
+                    SimpleTagBuilder tagBuilder = SimpleTagBuilder.of(ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID,"mods/"+originalItem.getNamespace()));
+                    tagBuilder.addEntry(item);
+                    dynamicPack.addTag(tagBuilder, Registries.ITEM);
+                }else if(itemId.getPath().contains("rod")){
+                    ResourceLocation originalItem = MPConfig.getIngotFromRod(itemId);
+                    SimpleTagBuilder tagBuilder = SimpleTagBuilder.of(ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID,"mods/"+originalItem.getNamespace()));
+                    tagBuilder.addEntry(item);
+                    dynamicPack.addTag(tagBuilder, Registries.ITEM);
+                }
             }
         });
     }
