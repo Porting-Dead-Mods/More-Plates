@@ -21,9 +21,9 @@ public class MPConfig {
     private static final File configFile = new File("config/moreplates/ingot_plate_pairs.json");
     private static final File generatorConfigFile = new File("config/moreplates/moreplates-generator.json");
     private static final List<String> generatorValues = new ArrayList<>();
-    private static Set<IngotPlatePair> registeredIngotPlatePairs = new HashSet<>();
-    private static Map<ResourceLocation, ResourceLocation> ingotToPlateMap = new HashMap<>();
-    private static Map<ResourceLocation, ResourceLocation> plateToIngotMap = new HashMap<>();
+    private static final Set<IngotPlatePair> registeredIngotPlatePairs = new HashSet<>();
+    private static final Map<ResourceLocation, ResourceLocation> ingotToPlateMap = new HashMap<>();
+    private static final Map<ResourceLocation, ResourceLocation> plateToIngotMap = new HashMap<>();
 
     public static void loadConfig() {
         FMLLoader.getGamePath().resolve("config").resolve(MorePlatesMod.MODID).toFile().mkdirs();
@@ -35,8 +35,8 @@ public class MPConfig {
                 if (pairs != null) {
                     for (var entry : pairs) {
                         JsonObject pair = entry.getAsJsonObject();
-                        ResourceLocation ingot = new ResourceLocation(pair.get("ingot").getAsString());
-                        ResourceLocation plate = new ResourceLocation(pair.get("plate").getAsString());
+                        ResourceLocation ingot = ResourceLocation.parse(pair.get("ingot").getAsString());
+                        ResourceLocation plate = ResourceLocation.parse(pair.get("plate").getAsString());
                         registeredIngotPlatePairs.add(new IngotPlatePair(ingot, plate));
                         ingotToPlateMap.put(ingot, plate);
                         plateToIngotMap.put(plate, ingot);
@@ -56,7 +56,6 @@ public class MPConfig {
                 JsonArray defaultArray = new JsonArray();
                 defaultArray.add("minecraft:diamond");
                 defaultArray.add("minecraft:emerald");
-                defaultArray.add("minecraft:chorus_fruit");
                 defaultArray.add("minecraft:quartz");
                 defaultArray.add("minecraft:lapis_lazuli");
                 defaultArray.add("minecraft:glowstone_dust");

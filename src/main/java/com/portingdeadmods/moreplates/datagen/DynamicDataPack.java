@@ -35,7 +35,6 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
     public DynamicDataPack() {
         super(new net.mehvahdjukaar.moonlight.api.resources.pack.DynamicDataPack(ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID,"generated_pack"), Pack.Position.TOP, false, false));
         this.dynamicPack.setGenerateDebugResources(PlatHelper.isDev());
-        this.dynamicPack.addNamespaces("c");
     }
 
 
@@ -62,8 +61,6 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
 
                 Item inputItem = BuiltInRegistries.ITEM.get(inputIngot);
 
-                ItemStack inputItemStack = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(namespace, path)).getDefaultInstance();
-
                 SimpleTagBuilder tagBuilder = SimpleTagBuilder.of(ResourceLocation.fromNamespaceAndPath("c", "plates/" + rawName.replace("_plate", "")));
                 SimpleTagBuilder generalTagBuilder = SimpleTagBuilder.of(ResourceLocation.fromNamespaceAndPath("c", "plates"));
                 tagBuilder.addEntry(item);
@@ -71,7 +68,6 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
                 dynamicPack.addTag(tagBuilder, Registries.ITEM);
                 dynamicPack.addTag(generalTagBuilder, Registries.ITEM);
 
-                Item ingot = inputItemStack.getItem();
                 ShapedRecipeBuilder recipeBuilder = ShapedRecipeBuilder.shaped(RecipeCategory.MISC, item)
                         .pattern("AB")
                         .pattern("B ")
@@ -86,7 +82,7 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
                     }
 
                     @Override
-                    public void accept(ResourceLocation resourceLocation, Recipe<?> recipe, @Nullable AdvancementHolder advancementHolder, ICondition... iConditions) {
+                    public void accept(@NotNull ResourceLocation resourceLocation, @NotNull Recipe<?> recipe, @Nullable AdvancementHolder advancementHolder, ICondition... iConditions) {
                         dynamicPack.addRecipe(recipe, resourceLocation);
                     }
                 });

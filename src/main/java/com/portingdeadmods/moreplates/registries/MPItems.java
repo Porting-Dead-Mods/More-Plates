@@ -3,6 +3,7 @@ package com.portingdeadmods.moreplates.registries;
 import com.portingdeadmods.moreplates.MorePlatesMod;
 import com.portingdeadmods.moreplates.config.MPConfig;
 import com.portingdeadmods.moreplates.content.items.HammerItem;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -26,7 +27,7 @@ public class MPItems {
                 String plateId = itemID + "_plate";
                 DeferredItem<Item> plate = ITEMS.register(plateId,
                         () -> new Item(new Item.Properties()));
-                MPConfig.saveIngotPlatePair(namespace + ":" + itemID, MorePlatesMod.MODID + ":" + plateId);
+                MPConfig.saveIngotPlatePair(ResourceLocation.parse(namespace + ":" + itemID), ResourceLocation.parse(MorePlatesMod.MODID + ":" + plateId));
             }
         }
     }
