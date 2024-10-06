@@ -19,10 +19,9 @@ public class PaletteUtil {
 
         originalPalette.reduceAndAverage();
 
-        RGBColor darkestColor = originalPalette.getColorAtSlope(0.2f).rgb();
-        RGBColor newColor = RGBColorUtil.modifyColor(darkestColor);
-
-        originalPalette.add(new PaletteColor(newColor));
+        // RGBColor darkestColor = originalPalette.getColorAtSlope(0.2f).rgb();
+        // RGBColor newColor = RGBColorUtil.modifyColor(darkestColor);
+        // originalPalette.add(new PaletteColor(newColor));
 
         return originalPalette;
     }

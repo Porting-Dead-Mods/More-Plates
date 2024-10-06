@@ -7,11 +7,13 @@ import com.portingdeadmods.moreplates.MorePlatesMod;
 import com.portingdeadmods.moreplates.config.MPConfig;
 import com.portingdeadmods.moreplates.registries.MPItems;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.resources.SimpleTagBuilder;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynServerResourcesGenerator;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
@@ -20,7 +22,6 @@ import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import org.apache.logging.log4j.Logger;
@@ -34,6 +35,7 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
     public DynamicDataPack() {
         super(new net.mehvahdjukaar.moonlight.api.resources.pack.DynamicDataPack(ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID,"generated_pack"), Pack.Position.TOP, false, false));
         this.dynamicPack.setGenerateDebugResources(PlatHelper.isDev());
+        this.dynamicPack.addNamespaces(MorePlatesMod.MODID, "c");
     }
 
 
@@ -67,6 +69,11 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
 
                 ItemStack inputItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(namespace,path)).getDefaultInstance();
 
+                SimpleTagBuilder tagBuilder = SimpleTagBuilder.of(ResourceLocation.fromNamespaceAndPath("c", "plates/"+rawName.replace("_plate", "")));
+                tagBuilder.addEntry(item);
+                this.dynamicPack.addTag(tagBuilder, Registries.ITEM);
+                System.out.println("Adding tag: "+tagBuilder.getId() + " with entry: "+item);
+
                 Item ingot = inputItem.getItem();
                 ShapedRecipeBuilder recipeBuilder = ShapedRecipeBuilder.shaped(RecipeCategory.MISC, item)
                         .pattern("AB")
@@ -86,7 +93,6 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
                         dynamicPack.addRecipe(recipe, resourceLocation);
                     }
                 });
-
             }
         });
     }
