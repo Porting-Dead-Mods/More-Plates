@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.minecraft.resources.ResourceLocation;
 import com.portingdeadmods.moreplates.MorePlatesMod;
 import net.neoforged.fml.loading.FMLLoader;
 
@@ -14,14 +15,15 @@ import java.io.IOException;
 import java.util.*;
 
 public class MPConfig {
+    private record IngotPlatePair(ResourceLocation ingot, ResourceLocation plate) {}
 
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static final File configFile = new File("config/moreplates/ingot_plate_pairs.json");
     private static final File generatorConfigFile = new File("config/moreplates/moreplates-generator.json");
     private static final List<String> generatorValues = new ArrayList<>();
-    private static Set<String> registeredIngotPlatePairs = new HashSet<>();
-    private static Map<String, String> ingotToPlateMap = new HashMap<>();
-    private static Map<String, String> plateToIngotMap = new HashMap<>();
+    private static Set<IngotPlatePair> registeredIngotPlatePairs = new HashSet<>();
+    private static Map<ResourceLocation, ResourceLocation> ingotToPlateMap = new HashMap<>();
+    private static Map<ResourceLocation, ResourceLocation> plateToIngotMap = new HashMap<>();
 
     public static void loadConfig() {
         FMLLoader.getGamePath().resolve("config").resolve(MorePlatesMod.MODID).toFile().mkdirs();
@@ -33,9 +35,9 @@ public class MPConfig {
                 if (pairs != null) {
                     for (var entry : pairs) {
                         JsonObject pair = entry.getAsJsonObject();
-                        String ingot = pair.get("ingot").getAsString();
-                        String plate = pair.get("plate").getAsString();
-                        registeredIngotPlatePairs.add(ingot + ":" + plate);
+                        ResourceLocation ingot = new ResourceLocation(pair.get("ingot").getAsString());
+                        ResourceLocation plate = new ResourceLocation(pair.get("plate").getAsString());
+                        registeredIngotPlatePairs.add(new IngotPlatePair(ingot, plate));
                         ingotToPlateMap.put(ingot, plate);
                         plateToIngotMap.put(plate, ingot);
                     }
@@ -79,8 +81,8 @@ public class MPConfig {
         }
     }
 
-    public static void saveIngotPlatePair(String ingotId, String plateId) {
-        String pairKey = ingotId + ":" + plateId;
+    public static void saveIngotPlatePair(ResourceLocation ingotId, ResourceLocation plateId) {
+        IngotPlatePair pairKey = new IngotPlatePair(ingotId, plateId);
 
         if (!registeredIngotPlatePairs.contains(pairKey)) {
             registeredIngotPlatePairs.add(pairKey);
@@ -90,18 +92,10 @@ public class MPConfig {
             JsonObject json = new JsonObject();
             JsonArray pairsArray = new JsonArray();
 
-            for (String pair : registeredIngotPlatePairs) {
-                int colonIndex = pair.indexOf(':');
-                String ingot = pair.substring(0, colonIndex);
-                String remaining = pair.substring(colonIndex + 1);
-
-                colonIndex = remaining.indexOf(':');
-                ingotId = remaining.substring(0, colonIndex);
-                plateId = remaining.substring(colonIndex + 1);
-
+            for (IngotPlatePair pair : registeredIngotPlatePairs) {
                 JsonObject pairObject = new JsonObject();
-                pairObject.addProperty("ingot", ingot + ":" + ingotId);
-                pairObject.addProperty("plate", plateId);
+                pairObject.addProperty("ingot", pair.ingot().toString());
+                pairObject.addProperty("plate", pair.plate().toString());
                 pairsArray.add(pairObject);
             }
 
@@ -119,13 +113,13 @@ public class MPConfig {
         return generatorValues;
     }
 
-    public static String getPlateFromIngot(String ingotId) {
+    // Method to get the plate from the given ingot
+    public static ResourceLocation getPlateFromIngot(ResourceLocation ingotId) {
         return ingotToPlateMap.get(ingotId);
     }
 
-    public static String getIngotFromPlate(String plateId) {
+    // Method to get the ingot from the given plate
+    public static ResourceLocation getIngotFromPlate(ResourceLocation plateId) {
         return plateToIngotMap.get(plateId);
     }
-
-
 }

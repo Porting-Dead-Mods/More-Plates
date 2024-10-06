@@ -53,36 +53,31 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
     @Override
     public void regenerateDynamicAssets(ResourceManager manager) {
         BuiltInRegistries.ITEM.forEach((item) -> {
-            if (item.getDescriptionId().contains(MorePlatesMod.MODID) && item.getDescriptionId().contains("plate")) {
-                // Get the raw item name without prefixes
-                String rawName = item.getDescriptionId()
-                        .replace("item.", "")
-                        .replace(MorePlatesMod.MODID + ":", "")
-                        .replace("moreplates.", "");
+            ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(item);
+            if (MorePlatesMod.MODID.equals(itemId.getNamespace()) && itemId.getPath().contains("plate")) {
+                String rawName = itemId.getPath();
 
-                String fullName = MorePlatesMod.MODID + ":" + rawName;
-                String fullNameOutput = MorePlatesMod.MODID+":"+rawName;
-                String fullNameInput = MPConfig.getIngotFromPlate(fullNameOutput);
-                if(fullNameInput == null) return;
-                String namespace = fullNameInput.split(":")[0];
-                String path = fullNameInput.split(":")[1];
+                ResourceLocation inputIngot = MPConfig.getIngotFromPlate(itemId);
+                if(inputIngot == null) return;
 
-                ItemStack inputItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(namespace,path)).getDefaultInstance();
+                Item inputItem = BuiltInRegistries.ITEM.get(inputIngot);
 
-                SimpleTagBuilder tagBuilder = SimpleTagBuilder.of(ResourceLocation.fromNamespaceAndPath("c", "plates/"+rawName.replace("_plate", "")));
+                ItemStack inputItemStack = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(namespace, path)).getDefaultInstance();
+
+                SimpleTagBuilder tagBuilder = SimpleTagBuilder.of(ResourceLocation.fromNamespaceAndPath("c", "plates/" + rawName.replace("_plate", "")));
                 SimpleTagBuilder generalTagBuilder = SimpleTagBuilder.of(ResourceLocation.fromNamespaceAndPath("c", "plates"));
                 tagBuilder.addEntry(item);
                 generalTagBuilder.addEntry(item);
                 dynamicPack.addTag(tagBuilder, Registries.ITEM);
                 dynamicPack.addTag(generalTagBuilder, Registries.ITEM);
 
-                Item ingot = inputItem.getItem();
+                Item ingot = inputItemStack.getItem();
                 ShapedRecipeBuilder recipeBuilder = ShapedRecipeBuilder.shaped(RecipeCategory.MISC, item)
                         .pattern("AB")
                         .pattern("B ")
                         .define('A', MPItems.HAMMER)
-                        .define('B', ingot)
-                        .unlockedBy("has_item", InventoryChangeTrigger.TriggerInstance.hasItems(ingot));
+                        .define('B', inputItem)
+                        .unlockedBy("has_item", InventoryChangeTrigger.TriggerInstance.hasItems(inputItem));
 
                 recipeBuilder.save(new RecipeOutput() {
                     @Override

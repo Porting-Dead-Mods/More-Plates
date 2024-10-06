@@ -2,7 +2,7 @@ package com.portingdeadmods.moreplates;
 
 import com.portingdeadmods.moreplates.config.MPConfig;
 import com.portingdeadmods.moreplates.datagen.DynamicDataPack;
-import com.portingdeadmods.moreplates.datagen.DynamicPack;
+import com.portingdeadmods.moreplates.datagen.DynamicResourcePack;
 import com.portingdeadmods.moreplates.registries.MPCreativeTabs;
 import com.portingdeadmods.moreplates.registries.MPItems;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -28,7 +28,7 @@ public class MorePlatesMod
         MPItems.ITEMS.register(modEventBus);
         MPCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
         modEventBus.addListener(MorePlatesMod::onCreativeTab);
-        DynamicPack.init();
+        DynamicResourcePack.init();
         DynamicDataPack.INSTANCE.register();
     }
 

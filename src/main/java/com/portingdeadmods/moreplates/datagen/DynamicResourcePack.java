@@ -12,9 +12,13 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.resources.ResourceManager;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 
-public class DynamicPack {
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+public class DynamicResourcePack {
     public static void init() {
         ClientAssetsGenerator generator = new ClientAssetsGenerator();
         generator.register();
@@ -29,24 +33,14 @@ public class DynamicPack {
         @Override
         public void regenerateDynamicAssets(ResourceManager manager) {
             BuiltInRegistries.ITEM.forEach((item) -> {
-                if (item.getDescriptionId().contains(MorePlatesMod.MODID) && item.getDescriptionId().contains("plate")) {
-                    String rawName = item.getDescriptionId()
-                            .replace("item.", "")
-                            .replace(MorePlatesMod.MODID + ":", "")
-                            .replace("moreplates.", "");
-
-                    ResourceLocation modelLocation = ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID, rawName);
+                ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(item);
+                if (MorePlatesMod.MODID.equals(itemId.getNamespace()) && itemId.getPath().contains("plate")) {
+                    String rawName = itemId.getPath();
                     ResourceLocation textureLocation = ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID, "item/" + rawName);
-                    String texture = MorePlatesMod.MODID + ":item/" + rawName;
-                    String doubleTexture = MorePlatesMod.MODID + ":item/double_sign";
-                    String hotSignTexture = MorePlatesMod.MODID + ":item/hot_sign";
 
-                    String ingotId = MPConfig.getIngotFromPlate(MorePlatesMod.MODID + ":" + rawName);
+                    ResourceLocation ingotId = MPConfig.getIngotFromPlate(itemId);
                     if(ingotId != null){
-                        String[] parts = ingotId.split(":", 2);
-                        String itemNamespace = parts[0];
-                        String itemId = parts[1];
-                        ResourceLocation ingotTexture = ResourceLocation.fromNamespaceAndPath(itemNamespace, "item/" + itemId);
+                        ResourceLocation ingotTexture = ResourceLocation.fromNamespaceAndPath(ingotId.getNamespace(), "item/" + ingotId.getPath());
                         TextureImage newPlateTexture = TextureUtils.createRecoloredTexture(manager, ingotTexture);
                         this.dynamicPack.addAndCloseTexture(textureLocation, newPlateTexture);
                     }
@@ -54,16 +48,22 @@ public class DynamicPack {
                     JsonObject model = new JsonObject();
                     model.addProperty("parent", "item/generated");
                     JsonObject textures = new JsonObject();
-                    textures.addProperty("layer0", texture);
+                    textures.addProperty("layer0", textureLocation.toString());
+
+                    // TODO: Condition is always false
                     if(rawName.contains("double") && !rawName.contains("hot")){
+                        String doubleTexture = MorePlatesMod.MODID + ":item/double_sign";
                         textures.addProperty("layer1", doubleTexture);
                     }
+
+                    // TODO: Condition is always false
                     if(rawName.contains("hot") && !rawName.contains("double")){
+                        String hotSignTexture = MorePlatesMod.MODID + ":item/hot_sign";
                         textures.addProperty("layer1", hotSignTexture);
                     }
                     model.add("textures", textures);
                     //Recipes
-                    this.dynamicPack.addItemModel(modelLocation, model);
+                    this.dynamicPack.addItemModel(itemId, model);
                 }
             });
         }
@@ -71,21 +71,14 @@ public class DynamicPack {
         @Override
         public void addDynamicTranslations(AfterLanguageLoadEvent languageEvent) {
             BuiltInRegistries.ITEM.forEach((item) -> {
-                if (item.getDescriptionId().contains(MorePlatesMod.MODID)) {
-                    String rawName = item.getDescriptionId().replace("item.", "").replace(MorePlatesMod.MODID + ":", "");
+                ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(item);
+                if (MorePlatesMod.MODID.equals(itemId.getNamespace())) {
+                    String rawName = itemId.getPath();
 
-                    String[] words = rawName.replace("moreplates.", "").split("_");
-                    StringBuilder formattedName = new StringBuilder();
+                    String languageKey = "item." + MorePlatesMod.MODID + '.' + rawName;
+                    String formattedName = Stream.of(rawName.split("_")).map(StringUtils::capitalize).collect(Collectors.joining(" "));
 
-                    for (String word : words) {
-                        formattedName.append(Character.toUpperCase(word.charAt(0)))
-                                .append(word.substring(1)).append(" ");
-                    }
-
-                    String languageKey = "item." + rawName;
-                    String formattedDisplayName = formattedName.toString().trim();
-
-                    languageEvent.addEntry(languageKey, formattedDisplayName);
+                    languageEvent.addEntry(languageKey, formattedName);
                 }
             });
         }
