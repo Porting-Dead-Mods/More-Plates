@@ -70,9 +70,11 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
                 ItemStack inputItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(namespace,path)).getDefaultInstance();
 
                 SimpleTagBuilder tagBuilder = SimpleTagBuilder.of(ResourceLocation.fromNamespaceAndPath("c", "plates/"+rawName.replace("_plate", "")));
+                SimpleTagBuilder generalTagBuilder = SimpleTagBuilder.of(ResourceLocation.fromNamespaceAndPath("c", "plates"));
                 tagBuilder.addEntry(item);
+                generalTagBuilder.addEntry(item);
                 dynamicPack.addTag(tagBuilder, Registries.ITEM);
-                System.out.println("Adding tag: "+tagBuilder.getId() + " with entry: "+item);
+                dynamicPack.addTag(generalTagBuilder, Registries.ITEM);
 
                 Item ingot = inputItem.getItem();
                 ShapedRecipeBuilder recipeBuilder = ShapedRecipeBuilder.shaped(RecipeCategory.MISC, item)
