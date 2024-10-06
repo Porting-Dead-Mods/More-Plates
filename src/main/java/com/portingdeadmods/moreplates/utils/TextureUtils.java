@@ -8,12 +8,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 
 public class TextureUtils {
-    public static TextureImage createRecoloredTexture(ResourceManager manager, ResourceLocation ingotTexture) {
+    public static TextureImage createRecoloredTexture(ResourceManager manager,ResourceLocation baseTexture, ResourceLocation ingotTexture) {
 
-        try (TextureImage base_plate = TextureImage.open(manager, ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID,"item/base_plate"));
+        try (TextureImage base_texture = TextureImage.open(manager, baseTexture);
              TextureImage ingot = TextureImage.open(manager, ingotTexture)) {
 
-            Respriter respriter = Respriter.of(base_plate);
+            Respriter respriter = Respriter.of(base_texture);
 
             Palette ingotPalette = PaletteUtil.modifyPaletteExample(ingot);
 

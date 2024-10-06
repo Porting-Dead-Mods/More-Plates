@@ -24,10 +24,24 @@ public class MPItems {
             if (parts.length == 2) {
                 String namespace = parts[0];
                 String itemID = parts[1];
+
+                // Register Plate
                 String plateId = itemID + "_plate";
                 DeferredItem<Item> plate = ITEMS.register(plateId,
                         () -> new Item(new Item.Properties()));
                 MPConfig.saveIngotPlatePair(ResourceLocation.parse(namespace + ":" + itemID), ResourceLocation.parse(MorePlatesMod.MODID + ":" + plateId));
+
+                // Register Gear
+                String gearId = itemID + "_gear";
+                DeferredItem<Item> gear = ITEMS.register(gearId,
+                        () -> new Item(new Item.Properties()));
+                MPConfig.saveIngotGearPair(ResourceLocation.parse(namespace + ":" + itemID), ResourceLocation.parse(MorePlatesMod.MODID + ":" + gearId));
+
+                // Register Rod
+                String rodId = itemID + "_rod";
+                DeferredItem<Item> rod = ITEMS.register(rodId,
+                        () -> new Item(new Item.Properties()));
+                MPConfig.saveIngotRodPair(ResourceLocation.parse(namespace + ":" + itemID), ResourceLocation.parse(MorePlatesMod.MODID + ":" + rodId));
             }
         }
     }

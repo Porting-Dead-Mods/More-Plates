@@ -16,14 +16,24 @@ import java.util.*;
 
 public class MPConfig {
     private record IngotPlatePair(ResourceLocation ingot, ResourceLocation plate) {}
+    private record IngotGearPair(ResourceLocation ingot, ResourceLocation gear) {}
+    private record IngotRodPair(ResourceLocation ingot, ResourceLocation rod) {}
 
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static final File configFile = new File("config/moreplates/ingot_plate_pairs.json");
+    private static final File ingotGearConfigFile = new File("config/moreplates/ingot_gear_pairs.json");
+    private static final File ingotRodConfigFile = new File("config/moreplates/ingot_rod_pairs.json");
     private static final File generatorConfigFile = new File("config/moreplates/moreplates-generator.json");
     private static final List<String> generatorValues = new ArrayList<>();
     private static final Set<IngotPlatePair> registeredIngotPlatePairs = new HashSet<>();
+    private static final Set<IngotGearPair> registeredIngotGearPairs = new HashSet<>();
+    private static final Set<IngotRodPair> registeredIngotRodPairs = new HashSet<>();
     private static final Map<ResourceLocation, ResourceLocation> ingotToPlateMap = new HashMap<>();
     private static final Map<ResourceLocation, ResourceLocation> plateToIngotMap = new HashMap<>();
+    private static final Map<ResourceLocation, ResourceLocation> ingotToGearMap = new HashMap<>();
+    private static final Map<ResourceLocation, ResourceLocation> gearToIngotMap = new HashMap<>();
+    private static final Map<ResourceLocation, ResourceLocation> ingotToRodMap = new HashMap<>();
+    private static final Map<ResourceLocation, ResourceLocation> rodToIngotMap = new HashMap<>();
 
     public static void loadConfig() {
         FMLLoader.getGamePath().resolve("config").resolve(MorePlatesMod.MODID).toFile().mkdirs();
@@ -40,6 +50,52 @@ public class MPConfig {
                         registeredIngotPlatePairs.add(new IngotPlatePair(ingot, plate));
                         ingotToPlateMap.put(ingot, plate);
                         plateToIngotMap.put(plate, ingot);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void loadIngotGearConfig() {
+        FMLLoader.getGamePath().resolve("config").resolve(MorePlatesMod.MODID).toFile().mkdirs();
+        if (ingotGearConfigFile.exists()) {
+            try (FileReader reader = new FileReader(ingotGearConfigFile)) {
+                JsonObject json = gson.fromJson(reader, JsonObject.class);
+                JsonArray pairs = json.getAsJsonArray("ingot_gear_pairs");
+
+                if (pairs != null) {
+                    for (var entry : pairs) {
+                        JsonObject pair = entry.getAsJsonObject();
+                        ResourceLocation ingot = ResourceLocation.parse(pair.get("ingot").getAsString());
+                        ResourceLocation gear = ResourceLocation.parse(pair.get("gear").getAsString());
+                        registeredIngotGearPairs.add(new IngotGearPair(ingot, gear));
+                        ingotToGearMap.put(ingot, gear);
+                        gearToIngotMap.put(gear, ingot);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void loadIngotRodConfig() {
+        FMLLoader.getGamePath().resolve("config").resolve(MorePlatesMod.MODID).toFile().mkdirs();
+        if (ingotRodConfigFile.exists()) {
+            try (FileReader reader = new FileReader(ingotRodConfigFile)) {
+                JsonObject json = gson.fromJson(reader, JsonObject.class);
+                JsonArray pairs = json.getAsJsonArray("ingot_rod_pairs");
+
+                if (pairs != null) {
+                    for (var entry : pairs) {
+                        JsonObject pair = entry.getAsJsonObject();
+                        ResourceLocation ingot = ResourceLocation.parse(pair.get("ingot").getAsString());
+                        ResourceLocation rod = ResourceLocation.parse(pair.get("rod").getAsString());
+                        registeredIngotRodPairs.add(new IngotRodPair(ingot, rod));
+                        ingotToRodMap.put(ingot, rod);
+                        rodToIngotMap.put(rod, ingot);
                     }
                 }
             } catch (IOException e) {
@@ -108,17 +164,87 @@ public class MPConfig {
         }
     }
 
+    public static void saveIngotGearPair(ResourceLocation ingotId, ResourceLocation gearId) {
+        IngotGearPair pairKey = new IngotGearPair(ingotId, gearId);
+
+        if (!registeredIngotGearPairs.contains(pairKey)) {
+            registeredIngotGearPairs.add(pairKey);
+            ingotToGearMap.put(ingotId, gearId);
+            gearToIngotMap.put(gearId, ingotId);
+
+            JsonObject json = new JsonObject();
+            JsonArray pairsArray = new JsonArray();
+
+            for (IngotGearPair pair : registeredIngotGearPairs) {
+                JsonObject pairObject = new JsonObject();
+                pairObject.addProperty("ingot", pair.ingot().toString());
+                pairObject.addProperty("gear", pair.gear().toString());
+                pairsArray.add(pairObject);
+            }
+
+            json.add("ingot_gear_pairs", pairsArray);
+
+            try (FileWriter writer = new FileWriter(ingotGearConfigFile)) {
+                gson.toJson(json, writer);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void saveIngotRodPair(ResourceLocation ingotId, ResourceLocation rodId) {
+        IngotRodPair pairKey = new IngotRodPair(ingotId, rodId);
+
+        if (!registeredIngotRodPairs.contains(pairKey)) {
+            registeredIngotRodPairs.add(pairKey);
+            ingotToRodMap.put(ingotId, rodId);
+            rodToIngotMap.put(rodId, ingotId);
+
+            JsonObject json = new JsonObject();
+            JsonArray pairsArray = new JsonArray();
+
+            for (IngotRodPair pair : registeredIngotRodPairs) {
+                JsonObject pairObject = new JsonObject();
+                pairObject.addProperty("ingot", pair.ingot().toString());
+                pairObject.addProperty("rod", pair.rod().toString());
+                pairsArray.add(pairObject);
+            }
+
+            json.add("ingot_rod_pairs", pairsArray);
+
+            try (FileWriter writer = new FileWriter(ingotRodConfigFile)) {
+                gson.toJson(json, writer);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public static List<String> getGeneratorValues() {
         return generatorValues;
     }
 
-    // Method to get the plate from the given ingot
     public static ResourceLocation getPlateFromIngot(ResourceLocation ingotId) {
         return ingotToPlateMap.get(ingotId);
     }
 
-    // Method to get the ingot from the given plate
     public static ResourceLocation getIngotFromPlate(ResourceLocation plateId) {
         return plateToIngotMap.get(plateId);
+    }
+
+    public static ResourceLocation getGearFromIngot(ResourceLocation ingotId) {
+        return ingotToGearMap.get(ingotId);
+    }
+
+    public static ResourceLocation getIngotFromGear(ResourceLocation gearId) {
+        return gearToIngotMap.get(gearId);
+    }
+
+    public static ResourceLocation getRodFromIngot(ResourceLocation ingotId) {
+        return ingotToRodMap.get(ingotId);
+    }
+
+    public static ResourceLocation getIngotFromRod(ResourceLocation rodId) {
+        return rodToIngotMap.get(rodId);
     }
 }

@@ -21,7 +21,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import org.apache.logging.log4j.Logger;
@@ -37,8 +36,6 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
         this.dynamicPack.setGenerateDebugResources(PlatHelper.isDev());
     }
 
-
-
     @Override
     public Logger getLogger() {
         return MorePlatesMod.LOGGER;
@@ -53,11 +50,12 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
     public void regenerateDynamicAssets(ResourceManager manager) {
         BuiltInRegistries.ITEM.forEach((item) -> {
             ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(item);
+
+            // Plates
             if (MorePlatesMod.MODID.equals(itemId.getNamespace()) && itemId.getPath().contains("plate")) {
                 String rawName = itemId.getPath();
-
                 ResourceLocation inputIngot = MPConfig.getIngotFromPlate(itemId);
-                if(inputIngot == null) return;
+                if (inputIngot == null) return;
 
                 Item inputItem = BuiltInRegistries.ITEM.get(inputIngot);
 
@@ -87,9 +85,79 @@ public class DynamicDataPack extends DynServerResourcesGenerator {
                     }
                 });
             }
+
+            // Gears
+            if (MorePlatesMod.MODID.equals(itemId.getNamespace()) && itemId.getPath().contains("gear")) {
+                String rawName = itemId.getPath();
+                ResourceLocation inputIngot = MPConfig.getIngotFromGear(itemId);
+                if (inputIngot == null) return;
+
+                Item inputItem = BuiltInRegistries.ITEM.get(inputIngot);
+
+                SimpleTagBuilder tagBuilder = SimpleTagBuilder.of(ResourceLocation.fromNamespaceAndPath("c", "gears/" + rawName.replace("_gear", "")));
+                SimpleTagBuilder generalTagBuilder = SimpleTagBuilder.of(ResourceLocation.fromNamespaceAndPath("c", "gears"));
+                tagBuilder.addEntry(item);
+                generalTagBuilder.addEntry(item);
+                dynamicPack.addTag(tagBuilder, Registries.ITEM);
+                dynamicPack.addTag(generalTagBuilder, Registries.ITEM);
+
+                ShapedRecipeBuilder recipeBuilder = ShapedRecipeBuilder.shaped(RecipeCategory.MISC, item)
+                        .pattern(" I ")
+                        .pattern("I I")
+                        .pattern(" I ")
+                        .define('I', inputItem)
+                        .unlockedBy("has_item", InventoryChangeTrigger.TriggerInstance.hasItems(inputItem));
+
+                recipeBuilder.save(new RecipeOutput() {
+                    @Override
+                    public Advancement.@NotNull Builder advancement() {
+                        return Advancement.Builder.advancement();
+                    }
+
+                    @Override
+                    public void accept(@NotNull ResourceLocation resourceLocation, @NotNull Recipe<?> recipe, @Nullable AdvancementHolder advancementHolder, ICondition... iConditions) {
+                        dynamicPack.addRecipe(recipe, resourceLocation);
+                    }
+                });
+            }
+
+            // Rods
+            if (MorePlatesMod.MODID.equals(itemId.getNamespace()) && itemId.getPath().contains("rod")) {
+                String rawName = itemId.getPath();
+                ResourceLocation inputIngot = MPConfig.getIngotFromRod(itemId);
+                if (inputIngot == null) return;
+
+                Item inputItem = BuiltInRegistries.ITEM.get(inputIngot);
+
+                SimpleTagBuilder tagBuilder = SimpleTagBuilder.of(ResourceLocation.fromNamespaceAndPath("c", "rods/" + rawName.replace("_rod", "")));
+                SimpleTagBuilder generalTagBuilder = SimpleTagBuilder.of(ResourceLocation.fromNamespaceAndPath("c", "rods"));
+                tagBuilder.addEntry(item);
+                generalTagBuilder.addEntry(item);
+                dynamicPack.addTag(tagBuilder, Registries.ITEM);
+                dynamicPack.addTag(generalTagBuilder, Registries.ITEM);
+
+                ShapedRecipeBuilder recipeBuilder = ShapedRecipeBuilder.shaped(RecipeCategory.MISC, item, 2)
+                        .pattern("H")
+                        .pattern("I")
+                        .pattern("I")
+                        .define('H', MPItems.HAMMER)
+                        .define('I', inputItem)
+                        .unlockedBy("has_item", InventoryChangeTrigger.TriggerInstance.hasItems(inputItem));
+
+                recipeBuilder.save(new RecipeOutput() {
+                    @Override
+                    public Advancement.@NotNull Builder advancement() {
+                        return Advancement.Builder.advancement();
+                    }
+
+                    @Override
+                    public void accept(@NotNull ResourceLocation resourceLocation, @NotNull Recipe<?> recipe, @Nullable AdvancementHolder advancementHolder, ICondition... iConditions) {
+                        dynamicPack.addRecipe(recipe, resourceLocation);
+                    }
+                });
+            }
         });
     }
-
 
     private static void removeNullEntries(JsonObject jsonObject) {
         jsonObject.entrySet().removeIf(entry -> entry.getValue().isJsonNull());
