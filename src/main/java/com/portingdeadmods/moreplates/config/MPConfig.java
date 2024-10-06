@@ -51,8 +51,16 @@ public class MPConfig {
 
         if (!generatorConfigFile.exists()) {
             try (FileWriter writer = new FileWriter(generatorConfigFile)) {
-                JsonArray emptyArray = new JsonArray();
-                gson.toJson(emptyArray, writer);
+                JsonArray defaultArray = new JsonArray();
+                defaultArray.add("minecraft:diamond");
+                defaultArray.add("minecraft:emerald");
+                defaultArray.add("minecraft:chorus_fruit");
+                defaultArray.add("minecraft:quartz");
+                defaultArray.add("minecraft:lapis_lazuli");
+                defaultArray.add("minecraft:glowstone_dust");
+                defaultArray.add("minecraft:blaze_powder");
+                defaultArray.add("minecraft:ender_pearl");
+                gson.toJson(defaultArray, writer);
             } catch (IOException e) {
                 e.printStackTrace();
             }
