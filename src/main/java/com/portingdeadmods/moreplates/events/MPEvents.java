@@ -23,6 +23,7 @@ public class MPEvents {
         @Override
         public void onAdd(Registry<Item> registry, int id, ResourceKey<Item> key, Item value) {
             ResourceLocation itemId = key.location();
+
             registerPlateFor(itemId, false, (plateId, plate) -> Registry.register(registry, plateId, plate));
             registerGearFor(itemId, false, (gearId, gear) -> Registry.register(registry, gearId, gear));
             registerRodFor(itemId, false, (rodId, rod) -> Registry.register(registry, rodId, rod));
@@ -44,7 +45,7 @@ public class MPEvents {
     }
 
     private static void registerPlateFor(ResourceLocation id, boolean onlyVanilla, BiConsumer<ResourceLocation, Item> regCallback) {
-        if (!MorePlatesMod.MODID.equals(id.getNamespace()) && IngotUtil.isValidIngot(id, onlyVanilla)) {
+        if (!MorePlatesMod.MODID.equals(id.getNamespace()) && IngotUtil.isValidIngotPlate(id, onlyVanilla)) {
             String ingotType = IngotUtil.getIngotType(id);
             ItemUtil.registerPlateIfNotYetDone(ingotType, id, regCallback);
         }

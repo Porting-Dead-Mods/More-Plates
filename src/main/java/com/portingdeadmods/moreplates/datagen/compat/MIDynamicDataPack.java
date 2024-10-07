@@ -1,4 +1,5 @@
 package com.portingdeadmods.moreplates.datagen.compat;
+import aztech.modern_industrialization.MIFluids;
 import aztech.modern_industrialization.machines.init.MIMachineRecipeTypes;
 import aztech.modern_industrialization.machines.recipe.MachineRecipeBuilder;
 import aztech.modern_industrialization.machines.recipe.MachineRecipeType;
@@ -63,7 +64,7 @@ public class MIDynamicDataPack extends DynServerResourcesGenerator {
 
                 Item inputItem = BuiltInRegistries.ITEM.get(inputIngot);
 
-                MachineRecipeBuilder recipeBuilder = new MachineRecipeBuilder(MIMachineRecipeTypes.COMPRESSOR, 16, 100)
+                MachineRecipeBuilder recipeBuilder = new MachineRecipeBuilder(MIMachineRecipeTypes.COMPRESSOR, 2, 400)
                         .addItemInput((ItemLike) inputItem,1)
                         .addItemOutput(item, 1);
 
@@ -75,9 +76,11 @@ public class MIDynamicDataPack extends DynServerResourcesGenerator {
 
                     @Override
                     public void accept(@NotNull ResourceLocation resourceLocation, @NotNull Recipe<?> recipe, @Nullable AdvancementHolder advancementHolder, ICondition... iConditions) {
+                        //Change namespace from modern_industrialization to moreplates
+                        resourceLocation = ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID, resourceLocation.getPath());
                         dynamicPack.addRecipe(recipe, resourceLocation);
                     }
-                },"compressor/moreplates/"+itemId.getPath());
+                }, "compressor/"+itemId.getPath());
             }
 
             // Gears
@@ -88,9 +91,10 @@ public class MIDynamicDataPack extends DynServerResourcesGenerator {
 
                 Item inputItem = BuiltInRegistries.ITEM.get(inputIngot);
 
-                MachineRecipeBuilder recipeBuilder = new MachineRecipeBuilder(MIMachineRecipeTypes.ASSEMBLER, 16, 100)
+                MachineRecipeBuilder recipeBuilder = new MachineRecipeBuilder(MIMachineRecipeTypes.ASSEMBLER, 2, 200)
                         .addItemInput((ItemLike) inputItem,4)
-                        .addItemOutput(item, 1);
+                        .addFluidInput(MIFluids.SOLDERING_ALLOY, 100)
+                        .addItemOutput(item, 2);
 
                 recipeBuilder.offerTo(new RecipeOutput() {
                     @Override
@@ -100,9 +104,11 @@ public class MIDynamicDataPack extends DynServerResourcesGenerator {
 
                     @Override
                     public void accept(@NotNull ResourceLocation resourceLocation, @NotNull Recipe<?> recipe, @Nullable AdvancementHolder advancementHolder, ICondition... iConditions) {
+                        //Change namespace from modern_industrialization to moreplates
+                        resourceLocation = ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID, resourceLocation.getPath());
                         dynamicPack.addRecipe(recipe, resourceLocation);
                     }
-                },"assembler/moreplates/"+itemId.getPath());
+                }, "assembler/"+itemId.getPath());
             }
 
             // Rods
@@ -113,16 +119,12 @@ public class MIDynamicDataPack extends DynServerResourcesGenerator {
 
                 Item inputItem = BuiltInRegistries.ITEM.get(inputIngot);
 
+                MachineRecipeBuilder recipeBuilder = new MachineRecipeBuilder(MIMachineRecipeTypes.CUTTING_MACHINE, 2, 200)
+                        .addItemInput((ItemLike) inputItem,2)
+                        .addFluidInput(MIFluids.LUBRICANT, 1)
+                        .addItemOutput(item, 2);
 
-                ShapedRecipeBuilder recipeBuilder = ShapedRecipeBuilder.shaped(RecipeCategory.MISC, item, 2)
-                        .pattern("H")
-                        .pattern("I")
-                        .pattern("I")
-                        .define('H', MPItems.HAMMER)
-                        .define('I', inputItem)
-                        .unlockedBy("has_item", InventoryChangeTrigger.TriggerInstance.hasItems(inputItem));
-
-                recipeBuilder.save(new RecipeOutput() {
+                recipeBuilder.offerTo(new RecipeOutput() {
                     @Override
                     public Advancement.@NotNull Builder advancement() {
                         return Advancement.Builder.advancement();
@@ -130,9 +132,12 @@ public class MIDynamicDataPack extends DynServerResourcesGenerator {
 
                     @Override
                     public void accept(@NotNull ResourceLocation resourceLocation, @NotNull Recipe<?> recipe, @Nullable AdvancementHolder advancementHolder, ICondition... iConditions) {
+                        //Change namespace from modern_industrialization to moreplates
+                        resourceLocation = ResourceLocation.fromNamespaceAndPath(MorePlatesMod.MODID, resourceLocation.getPath());
                         dynamicPack.addRecipe(recipe, resourceLocation);
                     }
-                });
+                }, "cutting_machine/"+itemId.getPath());
+
             }
 
         });

@@ -32,12 +32,10 @@ public class MorePlatesMod
         modEventBus.addListener(MorePlatesMod::onCreativeTab);
         DynamicResourcePack.init();
         DynamicDataPack.INSTANCE.register();
-        /*
         if(ModList.get().isLoaded("modern_industrialization")) {
-            LOGGER.info("Modern Industrialization detected, adding compatibility");
+            LOGGER.info("Modern Industrialization detected, adding recipes !");
             MIDynamicDataPack.INSTANCE.register();
         }
-         */
     }
 
     public static void onCreativeTab(BuildCreativeModeTabContentsEvent event) {
