@@ -121,7 +121,10 @@ dependencies {
     runtimeOnly "curse.maven:mystical-agriculture-246640:5774649"
     runtimeOnly "curse.maven:cucumber-272335:5774468"
     runtimeOnly "curse.maven:jei-238222:5781938"
-    implementation "curse.maven:selene-499980:5787975"
+
+
+    //implementation "curse.maven:selene-499980:5787975"
+    implementation "curse.maven:selene-499980:5983849"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
