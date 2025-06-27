@@ -30,7 +30,7 @@ public class MorePlatesMod
         MPItems.ITEMS.register(modEventBus);
         MPCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
         modEventBus.addListener(MorePlatesMod::onCreativeTab);
-        DynamicResourcePack.init();
+        if(FMLLoader.getDist().isClient()) DynamicResourcePack.init();
         DynamicDataPack.INSTANCE.register();
         if(ModList.get().isLoaded("modern_industrialization")) {
             LOGGER.info("Modern Industrialization detected, adding recipes !");
